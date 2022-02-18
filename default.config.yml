@@ -25,3 +25,5 @@ gf_auth_github_client_id: ''
 gf_auth_github_client_secret: ''
 gf_auth_github_team_ids: ''
 gf_auth_github_allowed_organizations: ''
+
+app_telegraf_version: 1.19.3

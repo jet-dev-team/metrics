@@ -51,7 +51,7 @@ services:
       - INFLUXDB_HTTP_HTTPS_CERTIFICATE=/etc/ssl/certs/cert.crt
       - INFLUXDB_HTTP_HTTPS_PRIVATE_KEY=/etc/ssl/private/cert.key
   telegraf:
-    image: telegraf:1.17.3
+    image: telegraf:{{ app_telegraf_version }}
     container_name: "{{ app_name }}-telegraf"
     restart: always
     command: --config-directory /etc/telegraf/telegraf.d
