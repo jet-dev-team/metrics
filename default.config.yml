@@ -18,6 +18,7 @@ influxdb_admin_password: arnold
 influxdb_database: telegraf
 influxdb_retention_duration: 4w
 app_influxdb_expose_port: 8086
+app_influxdb_version: 1.8.10
 
 gf_auth_github_enabled: false
 gf_auth_github_client_id: ''
