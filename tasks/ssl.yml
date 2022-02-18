@@ -1,0 +1,28 @@
+---
+
+- name: Make sure ssl directory exists.
+  become: yes
+  file:
+    path: "{{ app_ssl_dir }}"
+    state: directory
+    group: docker
+    owner: "{{ ansible_user }}"
+    mode: 0775
+
+- name: Copy SSL certificate
+  copy:
+    src: "../instances/{{ instance }}/ssl/cert.crt"
+    dest: "{{ app_ssl_dir }}/cert.crt"
+    owner: "{{ ansible_user }}"
+    group: docker
+    mode: 0644
+  ignore_errors: yes
+
+- name: Copy SSL key
+  copy:
+    src: "../instances/{{ instance }}/ssl/cert.key"
+    dest: "{{ app_ssl_dir }}/cert.key"
+    owner: "{{ ansible_user }}"
+    group: docker
+    mode: 0644
+  ignore_errors: yes

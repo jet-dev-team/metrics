@@ -1,0 +1,85 @@
+---
+
+- name: Create actual directory for Grafana volume.
+  file:
+    path: "{{ app_volumes_dir }}/grafana"
+    state: directory
+    group: docker
+    owner: "{{ ansible_user }}"
+    mode: 0777
+
+- name: Ensure grafana directory exists.
+  file:
+    path: "{{ app_runtime_dir }}/grafana"
+    state: directory
+    group: docker
+    owner: "{{ ansible_user }}"
+    mode: 0775
+
+- name: Ensure grafana provisioning directory exists.
+  file:
+    path: "{{ app_runtime_dir }}/grafana/provisioning"
+    state: directory
+    group: docker
+    owner: "{{ ansible_user }}"
+    mode: 0775
+
+- name: Ensure grafana datasources directory exists.
+  file:
+    path: "{{ app_runtime_dir }}/grafana/provisioning/datasources"
+    state: directory
+    group: docker
+    owner: "{{ ansible_user }}"
+    mode: 0775
+
+- name: Ensure grafana dashboards directory exists.
+  file:
+    path: "{{ app_runtime_dir }}/grafana/provisioning/dashboards"
+    state: directory
+    group: docker
+    owner: "{{ ansible_user }}"
+    mode: 0775
+
+- name: Ensure datasource file is present.
+  template:
+    src: ../templates/grafana/datasources/influxdb.yml
+    dest: "{{ app_runtime_dir }}/grafana/provisioning/datasources/influxdb.yml"
+    owner: "{{ ansible_user }}"
+    group: docker
+    mode: 0664
+
+- name: Ensure dashboard file is present.
+  template:
+    src: ../templates/grafana/dashboards/dashboard.yml
+    dest: "{{ app_runtime_dir }}/grafana/provisioning/dashboards/dashboard.yml"
+    owner: "{{ ansible_user }}"
+    group: docker
+    mode: 0664
+
+- name: Ensure dashboards are populated.
+  template:
+    src: "{{ item }}"
+    dest: "{{ app_runtime_dir }}/grafana/provisioning/dashboards/{{ item | basename | regex_replace('\\.json$', '') }}.json"
+    owner: "{{ ansible_user }}"
+    group: docker
+    mode: 0664
+  with_fileglob:
+    - ../instances/{{ instance }}/grafana/dashboards/*.json
+
+- name: Ensure grafana notifiers directory exists.
+  file:
+    path: "{{ app_runtime_dir }}/grafana/provisioning/notifiers"
+    state: directory
+    group: docker
+    owner: "{{ ansible_user }}"
+    mode: 0775
+
+- name: Ensure notifiers are populated.
+  template:
+    src: "{{ item }}"
+    dest: "{{ app_runtime_dir }}/grafana/provisioning/notifiers/{{ item | basename | regex_replace('\\.yaml$', '') }}.yaml"
+    owner: "{{ ansible_user }}"
+    group: docker
+    mode: 0664
+  with_fileglob:
+    - ../instances/{{ instance }}/grafana/notifiers/*.yaml

@@ -1,0 +1,50 @@
+---
+
+- hosts: server
+  become: no
+
+  vars_files:
+    - "../default.config.yml"
+
+  pre_tasks:
+    - name: Include config override file, if it exists.
+      include_vars: "{{ item }}"
+      with_fileglob:
+        - "../instances/{{ instance }}/config.yml"
+      tags: always
+
+  roles: []
+
+  tasks:
+    - name: Down all Docker containers
+      ignore_errors: yes
+      command: |
+        docker-compose -p {{ app_name }} down
+        chdir={{ app_runtime_dir }}
+
+    - name: Remove volumes
+      ignore_errors: yes
+      command: |
+        docker volume rm grafana
+        docker volume rm influxdb
+
+    - name: Ensure dirs and files are absent
+      file:
+        path: "{{ app_runtime_dir }}"
+        state: absent
+
+    - name: Ensure volumes dir is absent
+      become: yes
+      file:
+        path: "{{ app_volumes_dir }}"
+        state: absent
+
+    - name: Ensure ssl dir is absent
+      file:
+        path: "{{ app_ssl_dir }}"
+        state: absent
+
+    - name: Ensure app root dir is absent
+      file:
+        path: "{{ app_root }}"
+        state: absent

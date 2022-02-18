@@ -1,0 +1,9 @@
+---
+
+- name: Set Grafana admin password
+  command: "docker exec -it {{ app_name }}-grafana grafana-cli admin reset-admin-password {{ grafana_admin_password }}"
+  changed_when: false
+
+- name: Set InfluxDB retention policy
+  command: "docker exec {{ app_name }}-influxdb influx -ssl -host {{ app_domain }} -port 8086 -username '{{ influxdb_admin_user }}' -password '{{ influxdb_admin_password }}' -execute 'ALTER RETENTION POLICY autogen ON {{ influxdb_database }} DURATION {{ influxdb_retention_duration }}'"
+  changed_when: false

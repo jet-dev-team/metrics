@@ -1,0 +1,74 @@
+---
+
+- hosts: server
+  become: no
+
+  vars_files:
+    - "../default.config.yml"
+
+  pre_tasks:
+    - name: Include config override file, if it exists.
+      include_vars: "{{ item }}"
+      with_fileglob:
+        - "../instances/{{ instance }}/config.yml"
+      tags: always
+
+    - import_tasks: ../tasks/init.yml
+
+  roles: []
+
+  tasks:
+    - name: Make hello
+      debug:
+        msg: "Hello, {{ ansible_user }}!"
+
+    - name: Make sure app directory exists.
+      become: yes
+      file:
+        path: "{{ app_root }}"
+        state: directory
+        group: docker
+        owner: "{{ ansible_user }}"
+        mode: 0775
+      tags: config
+
+    - name: Make sure app runtime directory exists.
+      become: yes
+      file:
+        path: "{{ app_runtime_dir }}"
+        state: directory
+        group: docker
+        owner: "{{ ansible_user }}"
+        mode: 0775
+      tags: config
+
+    - name: Make sure volumes directory exists.
+      become: yes
+      file:
+        path: "{{ app_volumes_dir }}"
+        state: directory
+        group: docker
+        owner: "{{ ansible_user }}"
+        mode: 0775
+      tags: config
+
+    - import_tasks: ../tasks/ssl.yml
+      tags: config
+
+    - import_tasks: ../tasks/influxdb.yml
+      tags: config
+
+    - import_tasks: ../tasks/grafana.yml
+      tags: config
+
+    - import_tasks: ../tasks/nginx.yml
+      tags: config
+
+    - import_tasks: ../tasks/telegraf.yml
+      tags: config
+
+    - import_tasks: ../tasks/docker.yml
+      tags: config
+
+    - import_tasks: ../tasks/post.yml
+      tags: config

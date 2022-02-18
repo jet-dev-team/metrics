@@ -1,0 +1,25 @@
+---
+
+- name: Ensure nginx directory exists.
+  file:
+    path: "{{ app_runtime_dir }}/nginx"
+    state: directory
+    group: docker
+    owner: "{{ ansible_user }}"
+    mode: 0775
+
+- name: Ensure conf.d directory exists.
+  file:
+    path: "{{ app_runtime_dir }}/nginx/conf.d"
+    state: directory
+    group: docker
+    owner: "{{ ansible_user }}"
+    mode: 0775
+
+- name: Ensure vhost is available.
+  template:
+    src: ../templates/nginx/conf.d/vhost.conf
+    dest: "{{ app_runtime_dir }}/nginx/conf.d/vhost.conf"
+    owner: "{{ ansible_user }}"
+    group: docker
+    mode: 0664

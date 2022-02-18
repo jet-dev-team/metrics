@@ -1,0 +1,78 @@
+---
+
+version: "3"
+
+services:
+  grafana:
+    image: grafana/grafana:{{ app_gafana_version }}
+    container_name: "{{ app_name }}-grafana"
+    restart: always
+    ports:
+      - "{{ grafana_port }}:{{ grafana_port }}"
+    networks:
+      - monitoring
+    volumes:
+      - "{{ app_volumes_dir }}/grafana:/var/lib/grafana"
+      - "{{ app_ssl_dir }}/cert.crt:/etc/ssl/certs/cert.crt"
+      - "{{ app_ssl_dir }}/cert.key:/etc/ssl/private/cert.key"
+      - "{{ app_runtime_dir }}/grafana/provisioning/:/etc/grafana/provisioning/"
+    environment:
+      - GF_USERS_ALLOW_SIGN_UP=false
+      - GF_AUTH_GITHUB_ENABLED={{ gf_auth_github_enabled }}
+      - GF_AUTH_GITHUB_ALLOW_SIGN_UP=true
+      - GF_AUTH_GITHUB_SCOPES=user:email,read:org
+      - GF_AUTH_GITHUB_TEAM_IDS={{ gf_auth_github_team_ids }}
+      - GF_AUTH_GITHUB_ALLOWED_ORGANIZATIONS={{ gf_auth_github_allowed_organizations }}
+      - GF_AUTH_GITHUB_AUTH_URL=https://github.com/login/oauth/authorize
+      - GF_AUTH_GITHUB_TOKEN_URL=https://github.com/login/oauth/access_token
+      - GF_AUTH_GITHUB_API_URL=https://api.github.com/user
+      - GF_AUTH_GITHUB_CLIENT_ID={{ gf_auth_github_client_id }}
+      - GF_AUTH_GITHUB_CLIENT_SECRET={{ gf_auth_github_client_secret }}
+  influxdb:
+    image: influxdb:1.8.6
+    container_name: "{{ app_name }}-influxdb"
+    restart: always
+    ports:
+      - "{{ app_influxdb_expose_port }}:8086"
+    networks:
+      - monitoring
+    volumes:
+      - "{{ app_volumes_dir }}/influxdb:/var/lib/influxdb"
+      - "{{ app_ssl_dir }}/cert.crt:/etc/ssl/certs/cert.crt"
+      - "{{ app_ssl_dir }}/cert.key:/etc/ssl/private/cert.key"
+    environment:
+      - INFLUXDB_HTTP_AUTH_ENABLED=true
+      - INFLUXDB_DB=telegraf
+      - INFLUXDB_USER=telegraf
+      - INFLUXDB_ADMIN_ENABLED=true
+      - INFLUXDB_ADMIN_USER={{ influxdb_admin_user }}
+      - INFLUXDB_ADMIN_PASSWORD={{ influxdb_admin_password }}
+      - INFLUXDB_HTTP_HTTPS_ENABLED=true
+      - INFLUXDB_HTTP_HTTPS_CERTIFICATE=/etc/ssl/certs/cert.crt
+      - INFLUXDB_HTTP_HTTPS_PRIVATE_KEY=/etc/ssl/private/cert.key
+  telegraf:
+    image: telegraf:1.17.3
+    container_name: "{{ app_name }}-telegraf"
+    restart: always
+    command: --config-directory /etc/telegraf/telegraf.d
+    volumes:
+      - "{{ app_runtime_dir }}/telegraf/telegraf.conf:/etc/telegraf/telegraf.conf"
+      - "{{ app_runtime_dir }}/telegraf/telegraf.d/:/etc/telegraf/telegraf.d"
+    networks:
+      - monitoring
+  nginx:
+    image: nginx:1.21.6
+    container_name: "{{ app_name }}-nginx"
+    restart: always
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - "{{ app_runtime_dir }}/nginx/conf.d:/etc/nginx/conf.d/"
+      - "{{ app_ssl_dir }}/cert.crt:/etc/ssl/certs/cert.crt"
+      - "{{ app_ssl_dir }}/cert.key:/etc/ssl/private/cert.key"
+    networks:
+      - monitoring
+
+networks:
+  monitoring:

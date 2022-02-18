@@ -1,0 +1,34 @@
+---
+
+- name: Ensure config directory exists.
+  file:
+    path: "{{ app_runtime_dir }}/telegraf"
+    state: directory
+    group: docker
+    owner: "{{ ansible_user }}"
+    mode: 0775
+
+- name: Ensure config file is present.
+  template:
+    src: ../templates/telegraf/telegraf.conf
+    dest: "{{ app_runtime_dir }}/telegraf/telegraf.conf"
+    mode: 0664
+    group: docker
+
+- name: Ensure telegraf.d directory exists.
+  file:
+    path: "{{ app_runtime_dir }}/telegraf/telegraf.d"
+    state: directory
+    group: docker
+    owner: "{{ ansible_user }}"
+    mode: 0775
+
+- name: Ensure instance configs are populated.
+  template:
+    src: "{{ item }}"
+    dest: "{{ app_runtime_dir }}/telegraf/telegraf.d/{{ item | basename | regex_replace('\\.conf$', '') }}.conf"
+    owner: "{{ ansible_user }}"
+    group: docker
+    mode: 0664
+  with_fileglob:
+    - ../instances/{{ instance }}/telegraf/telegraf.d/*.conf

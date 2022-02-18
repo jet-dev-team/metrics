@@ -1,0 +1,9 @@
+---
+
+- name: Create actual directory for InfluxDB volume.
+  file:
+    path: "{{ app_volumes_dir }}/influxdb"
+    state: directory
+    group: docker
+    owner: "{{ ansible_user }}"
+    mode: 0777

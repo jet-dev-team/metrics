@@ -1,0 +1,22 @@
+---
+
+- name: Make sure a network exists
+  docker_network:
+    name: monitoring
+
+- name: Ensure Docker Compose file is present
+  template:
+    src: ../templates/docker-compose.yml
+    dest: "{{ app_runtime_dir }}/docker-compose.yml"
+    mode: 0664
+    group: docker
+
+- name: Stop all Docker containers
+  command: |
+    docker-compose -p {{ app_name }} stop
+    chdir={{ app_runtime_dir }}
+
+- name: Bring up the Docker containers
+  command: |
+    docker-compose -p {{ app_name }} up -d --remove-orphans
+    chdir={{ app_runtime_dir }}
