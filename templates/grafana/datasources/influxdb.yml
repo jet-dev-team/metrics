@@ -6,13 +6,15 @@ datasources:
     typeLogoUrl: public/app/plugins/datasource/influxdb/img/influxdb_logo.svg
     access: proxy
     database: {{ influxdb_database }}
-    password: ""
     user: ""
     url: https://{{ instance }}-influxdb:8086
     basicAuth: true
-    basicAuthUser: {{ influxdb_admin_user }}
-    basicAuthPassword: {{ influxdb_admin_password }}
     isDefault: true
     editable: false
     jsonData:
       tlsSkipVerify: true
+      httpMode: POST
+    secureJsonData:
+      basicAuthUser: {{ influxdb_admin_user }}
+      basicAuthPassword: {{ influxdb_admin_password }}
+      password: ""
