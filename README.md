@@ -2,10 +2,13 @@
 
 Docker implementation of monitoring server (TIG Stack).
 
+Example instance (metrics.demo.jet.dev) could be found in [separate instance repository](https://github.com/jet-dev-team/metrics-demo-jet-dev).
+
 ## Quick start
 
 - Make sure you have Ansible installed on your loca machine
 - Clone the repository to your local machine
+- Clone [example instance's repository](https://github.com/jet-dev-team/metrics-demo-jet-dev)
 - Make sure your instance's code is located in `instances` directory
 - Make sure your instance's `ssl` directory contains `cert.crt` and `cert.key` files
 - Prepare fresh server. Example cloud-init could be found in `instances/metrics.demo.jet.dev/cloud-init.yml`
@@ -52,10 +55,10 @@ sudo vi /etc/telegraf/telegraf.conf
   omit_hostname = false
 
 [[outputs.influxdb]]
-  urls = ["https://monitor.sandbox.jet.dev:8086"]
+  urls = ["https://metrics.demo.jet.dev:8443"]
   database = "telegraf"
-  username = "ZqSgG8z&H61D"
-  password = "0p#Z4@evM2sc"
+  username = "secret"
+  password = "secret"
 
 [[inputs.cpu]]
 [[inputs.disk]]
