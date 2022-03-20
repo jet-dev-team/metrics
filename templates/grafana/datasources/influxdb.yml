@@ -7,7 +7,7 @@ datasources:
     access: proxy
     database: {{ influxdb_database }}
     user: ""
-    url: http://{{ app_name }}-influxdb:8086
+    url: https://{{ app_name }}-influxdb:8086
     basicAuth: true
     isDefault: true
     editable: true
