@@ -27,6 +27,6 @@ gf_auth_github_team_ids: ''
 gf_auth_github_allowed_organizations: ''
 
 # It is recomended to pass the next vars as extra variables to be secure.
-grafana_admin_password: secret
-influxdb_admin_user: secret
-influxdb_admin_password: secret
+# grafana_admin_password: secret
+# influxdb_admin_user: secret
+# influxdb_admin_password: secret
