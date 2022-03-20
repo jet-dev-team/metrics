@@ -9,12 +9,12 @@ datasources:
     user: ""
     url: https://{{ app_name }}-influxdb:8086
     basicAuth: true
+    basicAuthUser: {{ influxdb_admin_user }}
     isDefault: true
     editable: true
     jsonData:
       tlsSkipVerify: true
       httpMode: POST
     secureJsonData:
-      basicAuthUser: {{ influxdb_admin_user }}
       basicAuthPassword: {{ influxdb_admin_password }}
       password: ""
