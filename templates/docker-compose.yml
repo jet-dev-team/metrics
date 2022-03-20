@@ -17,6 +17,7 @@ services:
       - "{{ app_ssl_dir }}/cert.key:/etc/ssl/private/cert.key"
       - "{{ app_runtime_dir }}/grafana/provisioning/:/etc/grafana/provisioning/"
     environment:
+      - GF_ADMIN_PASSWORD={{ grafana_admin_password }}
       - GF_USERS_ALLOW_SIGN_UP=false
       - GF_AUTH_GITHUB_ENABLED={{ gf_auth_github_enabled }}
       - GF_AUTH_GITHUB_ALLOW_SIGN_UP=true
