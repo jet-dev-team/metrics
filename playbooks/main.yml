@@ -3,6 +3,11 @@
 - hosts: server
   become: no
 
+  vars:
+    grafana_admin_password: "{{ lookup('env', 'GRAFANA_ADMIN_PASSWORD') }}"
+    influxdb_admin_user: "{{ lookup('env', 'INFLUXDB_ADMIN_USER') }}"
+    influxdb_admin_password: "{{ lookup('env', 'INFLUXDB_ADMIN_PASSWORD') }}"
+
   vars_files:
     - "../default.config.yml"
 
