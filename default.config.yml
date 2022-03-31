@@ -9,10 +9,10 @@ app_ssl_dir: '{{ app_root }}/ssl'
 app_volumes_dir: '{{ app_root }}/volumes'
 app_domain: localhost
 
-app_gafana_version: 8.4.0
+app_gafana_version: 8.4.4
 grafana_port: 3000
 
-app_telegraf_version: 1.19.3
+app_telegraf_version: 1.20.4
 
 influxdb_database: telegraf
 influxdb_retention_duration: 4w
