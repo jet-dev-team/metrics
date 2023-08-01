@@ -184,6 +184,20 @@ Restart.
 sudo systemctl restart telegraf
 ```
 
+In order to add to syslog specific log file the next config could be used.
+The config below is reading the Apache error log file with severity `err`.
+
+```sh
+$ModLoad imfile
+$InputFilePollInterval 10
+$InputFileName  /var/log/apache2/error.log
+$InputFileTag apache2-error
+$InputFileStateFile stat-apache-error
+$InputFileSeverity err
+$InputRunFileMonitor
+$InputFileFacility local7
+```
+
 ## Articles
 
 - [Telegraf / InfluxDB / Grafana as syslog receiver](https://nwmichl.net/2020/03/15/telegraf-influxdb-grafana-as-syslog-receiver/)
