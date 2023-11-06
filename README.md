@@ -211,6 +211,7 @@ $InputFileFacility local7
 ## HOWTO
 
 - [Export dashboards](https://gist.github.com/crisidev/bd52bdcc7f029be2f295#gistcomment-3593795)
+- [Configure logrotate for docker to avoid "no left space on device"](https://medium.com/free-code-camp/how-to-setup-log-rotation-for-a-docker-container-a508093912b2)
 
 ### InfluxDB CLI
 
