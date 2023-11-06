@@ -18,5 +18,5 @@
 
 - name: Bring up the Docker containers
   command: |
-    docker-compose -p {{ app_name }} up -d --remove-orphans
+    docker-compose -p {{ app_name }} up -d --remove-orphans --force-recreate
     chdir={{ app_runtime_dir }}
